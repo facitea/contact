@@ -9,28 +9,31 @@
     #madeby,#guide{font-size: 6px;}
     table,th,td{border: 1px solid #444444;}
     h1{margin:2px}
+    #team{width: 300px;}
+    #number{width: 100px;}
+    th{text-align: center;}
     </style>
 </head>
 <body onresize="parent.resizeTo(500,400)" onload="parent.resizeTo(500,400)">
     <h1>치과병원 전화번호부 <div id="madeby">made by 경영지원팀 원무파트 양종현</div></h1>
     <p>
     <div id="guide">Enter : 검색 / Esc :초기화</div>
-    <input type="text" id="search" onkeyup="enterkey()" autofocus>
+    <input type="text" id="search" onkeyup="enterkey()" onkeydown="del()" autofocus>
     <input type="button" value="검색" onclick="clicks()">
     <input type="button" value="초기화" onclick="resets()">
 
     <table id = "mytable">
       <thead>
         <tr>
-            <th>소속</th>
-            <th>번호</th>
+            <th id="team">소속</th>
+            <th id="number">번호</th>
         </tr>
       </thead>
       <tfoot>
         <td colspan="3" align="right">
         </td>  
        </tfoot>
-       <tbody></tbody>
+       <tbody id="my-tbody"></tbody>
     </table>
 
     <script>
@@ -54,7 +57,7 @@
             ["경영지원팀 FAX", "2227~8433"],
             ["경영지원팀 원무파트 파트장", "88630"],
             ["경영지원팀 원무파트 미수,신용카드", "88631"],
-            ["경원지원팀 접수, 수납", "88642~7"],
+            ["경영지원팀 원무파트 접수, 수납", "88642~7"],
             ["진료지원팀 팀장", "88606"],
             ["진료지원팀", "88608"],
             ["진료지원팀 약국", "88650~1"],
@@ -198,6 +201,10 @@
             ["휴엠케어(해충방제)", "44816"],
         ];
 
+        function del(){
+            document.getElementById('my-tbody').innerHTML=" ";
+        }
+
         function resets(){
             window.location.reload()
         } //초기화 버튼
@@ -215,12 +222,12 @@
 
         function clicks(){
             let searchContent = document.getElementById('search').value; //인풋값 추출
-            let seararr = new RegExp(searchContent, 'g');
+            let seararr = new RegExp(searchContent);//, 'g'
             let resarr = [];
             let i;
 
             for (i=0; i<300; i++){
-                if (seararr.test(JSON.stringify(book[i])) == true){
+                if (seararr.test(book[i]) == true){
                     resarr.push(book[i]);
                 }
             } //resarr에 검색어 일치 단어 넣기
