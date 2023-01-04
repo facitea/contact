@@ -1,43 +1,73 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>치과병원 전화번호부</title>
     <style>
-    #madeby,#guide{font-size: 6px;}
-    table,th,td{border: 1px solid #444444;}
-    h1{margin:2px}
-    #team{width: 300px;}
-    #number{width: 100px;}
-    th{text-align: center;}
+        .searchBar {
+            width: 298px;
+        }
+
+        .guide {
+            font-size: 6px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #444444;
+        }
+
+        h1 {
+            margin: 2px
+        }
+
+        .team {
+            width: 300px;
+        }
+
+        .number {
+            width: 100px;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
-<body onresize="parent.resizeTo(500,400)" onload="parent.resizeTo(500,400)">
-    <h1>치과병원 전화번호부 <div id="madeby">made by 경영지원팀 원무파트 양종현</div></h1>
-    <p>
-    <div id="guide">Enter : 검색 / Esc :초기화</div>
-    <input type="text" id="search" onkeyup="enterkey()" onkeydown="del()" autofocus>
-    <input type="button" value="검색" onclick="clicks()">
-    <input type="button" value="초기화" onclick="resets()">
 
-    <table id = "mytable">
-      <thead>
-        <tr>
-            <th id="team">소속</th>
-            <th id="number">번호</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <td colspan="3" align="right">
-        </td>  
-       </tfoot>
-       <tbody id="my-tbody"></tbody>
+<body>
+    <h1>치과병원 전화번호부</h1>
+    <div class="guide">Enter : 검색 / Esc :초기화</div>
+    <div>
+        <input type="text" id="searchBar" class="searchBar" onkeyup="enterkey()" onkeydown="del()" autofocus>
+        <input type="button" value="검색" onclick="clicks()">
+        <input type="button" value="초기화" onclick="resets()">
+    </div>
+
+    <table id="tableId">
+        <thead>
+            <tr>
+                <th class="team">소속</th>
+                <th class="number">번호</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <td colspan="3">
+            </td>
+        </tfoot>
+        <tbody id="tableBody"></tbody>
     </table>
 
     <script>
-        let book = [
+        var book = [
             ["병원장실 병원장", "88600"],
             ["병원장실 비서실", "88601~2"],
             ["병원장실 FAX", "2227-8477"],
@@ -201,61 +231,66 @@
             ["휴엠케어(해충방제)", "44816"],
         ];
 
-        function del(){
-            document.getElementById('my-tbody').innerHTML=" ";
+        var tableBody = document.getElementById('tableBody');
+        var searchBar = document.getElementById('searchBar');
+
+        const del = () => {
+            tableBody.innerHTML = " ";
         }
 
-        function resets(){
-            window.location.reload()
+        const resets = () => {
+            searchBar.value = "";
         } //초기화 버튼
 
-        function enterkey() {
+        const enterkey = () => {
             if (window.event.keyCode == 13) {
                 // 엔터키가 눌렸을 때 실행할 내용
                 clicks();
-                }
-                
-            if (window.event.keyCode == 27){
+            }
+
+            if (window.event.keyCode == 27) {
+                // ESC키가 눌렸을 때 실행할 내용
                 resets();
             }
         }
 
-        function clicks(){
-            let searchContent = document.getElementById('search').value; //인풋값 추출
+        const clicks = () => {
+            let searchContent = searchBar.value; //인풋값 추출
             let seararr = new RegExp(searchContent);//, 'g'
             let resarr = [];
             let i;
 
-            for (i=0; i<300; i++){
-                if (seararr.test(book[i]) == true){
+            for (i = 0; i < 300; i++) {
+                if (seararr.test(book[i]) == true) {
                     resarr.push(book[i]);
                 }
             } //resarr에 검색어 일치 단어 넣기
 
-            for(let j = 0; j<300; j++){
-                    var tr_obj = document.createElement("tr"); // tr엘리먼트 생성 <tr></tr>
-                    var td_obj1 = document.createElement("td"); // td엘리먼트 생성 <td></td>
-                    var td_obj2 = document.createElement("td"); // <td></td>
-                        
-                        //td에 값넣기위해서 innerHTML사용
-                    td_obj1.innerHTML = resarr[j][0];
-                    td_obj2.innerHTML = resarr[j][1];
-                        
-                        //td를 tr에 삽입 -> td를 tr의 자식요소로 만들어야한다.
-                    tr_obj.appendChild(td_obj1);
-                    tr_obj.appendChild(td_obj2);
-                        
-                        //원하는 테이블의 원하는 장소에 자식요소로 만들기.
-                    var table = document.getElementById("mytable"); //테이블의 아이디를 이용
-                        
-                        //3번째 자식 요소를 얻어내서 추가해야한다.(tbody를 3번째로 만들어 놓음)
-                    var tbody = table.children[2];
-                        //여기에 값넣기.
-                    tbody.appendChild(tr_obj);
+            for (let j = 0; j < resarr.length; j++) {
+                var tr_obj = document.createElement("tr"); // tr엘리먼트 생성 <tr></tr>
+                var td_obj1 = document.createElement("td"); // td엘리먼트 생성 <td></td>
+                var td_obj2 = document.createElement("td"); // <td></td>
+
+                //td에 값넣기위해서 innerHTML사용
+                td_obj1.innerHTML = resarr[j][0];
+                td_obj2.innerHTML = resarr[j][1];
+
+                //td를 tr에 삽입 -> td를 tr의 자식요소로 만들어야한다.
+                tr_obj.appendChild(td_obj1);
+                tr_obj.appendChild(td_obj2);
+
+                //원하는 테이블의 원하는 장소에 자식요소로 만들기.
+                var table = document.getElementById("tableId"); //테이블의 아이디를 이용
+
+                //3번째 자식 요소를 얻어내서 추가해야한다.(tbody를 3번째로 만들어 놓음)
+                var tbody = table.children[2];
+                //여기에 값넣기.
+                tbody.appendChild(tr_obj);
             }
         }
 
     </script>
 
 </body>
+
 </html>
