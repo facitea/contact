@@ -1,4 +1,4 @@
-# severance_numberbook
+# numberbook
 
 ## 병원 전화번호부
 
