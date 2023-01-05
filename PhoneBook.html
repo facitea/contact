@@ -47,9 +47,9 @@
     <h1>치과병원 전화번호부</h1>
     <div class="guide">Enter : 검색 / Esc :초기화</div>
     <div>
-        <input type="text" id="searchBar" class="searchBar" onkeyup="enterkey()" onkeydown="del()" autofocus>
-        <input type="button" value="검색" onclick="clicks()">
-        <input type="button" value="초기화" onclick="resets()">
+        <input type="text" id="searchBar" class="searchBar" autofocus>
+        <input type="button" id="searchBtn" value="검색">
+        <input type="button" id="resetBtn" value="초기화">
     </div>
 
     <table id="tableId">
@@ -67,7 +67,7 @@
     </table>
 
     <script>
-        var book = [
+        const book = [
             ["병원장실 병원장", "88600"],
             ["병원장실 비서실", "88601~2"],
             ["병원장실 FAX", "2227-8477"],
@@ -231,8 +231,26 @@
             ["휴엠케어(해충방제)", "44816"],
         ];
 
-        var tableBody = document.getElementById('tableBody');
-        var searchBar = document.getElementById('searchBar');
+        const searchBtn = document.getElementById('searchBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const tableBody = document.getElementById('tableBody');
+        const searchBar = document.getElementById('searchBar');
+
+        searchBtn.addEventListener('click', () => {
+            search();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            resets();
+        });
+
+        searchBar.addEventListener('keyup', () => {
+            enterkey();
+        });
+
+        searchBar.addEventListener('keydown', () => {
+            del();
+        });
 
         const del = () => {
             tableBody.innerHTML = " ";
@@ -243,49 +261,48 @@
         } //초기화 버튼
 
         const enterkey = () => {
-            if (window.event.keyCode == 13) {
+            if (window.event.keyCode === 13) {
                 // 엔터키가 눌렸을 때 실행할 내용
-                clicks();
+                search();
             }
 
-            if (window.event.keyCode == 27) {
+            if (window.event.keyCode === 27) {
                 // ESC키가 눌렸을 때 실행할 내용
                 resets();
             }
         }
 
-        const clicks = () => {
-            let searchContent = searchBar.value; //인풋값 추출
-            let seararr = new RegExp(searchContent);//, 'g'
-            let resarr = [];
-            let i;
+        const search = () => {
+            const searchKeyword = searchBar.value; //인풋값 추출
+            const searchReg = new RegExp(searchKeyword);//, 'g'
+            let resArr = [];
 
-            for (i = 0; i < 300; i++) {
-                if (seararr.test(book[i]) == true) {
-                    resarr.push(book[i]);
+            for (let i = 0; i < book.length; i++) {
+                if (searchReg.test(book[i]) == true) {
+                    resArr.push(book[i]);
                 }
             } //resarr에 검색어 일치 단어 넣기
 
-            for (let j = 0; j < resarr.length; j++) {
-                var tr_obj = document.createElement("tr"); // tr엘리먼트 생성 <tr></tr>
-                var td_obj1 = document.createElement("td"); // td엘리먼트 생성 <td></td>
-                var td_obj2 = document.createElement("td"); // <td></td>
+            for (let j = 0; j < resArr.length; j++) {
+                const trObj = document.createElement("tr");
+                const tdObj1 = document.createElement("td");
+                const tdObj2 = document.createElement("td");
 
                 //td에 값넣기위해서 innerHTML사용
-                td_obj1.innerHTML = resarr[j][0];
-                td_obj2.innerHTML = resarr[j][1];
+                tdObj1.innerHTML = resArr[j][0];
+                tdObj2.innerHTML = resArr[j][1];
 
                 //td를 tr에 삽입 -> td를 tr의 자식요소로 만들어야한다.
-                tr_obj.appendChild(td_obj1);
-                tr_obj.appendChild(td_obj2);
+                trObj.appendChild(tdObj1);
+                trObj.appendChild(tdObj2);
 
                 //원하는 테이블의 원하는 장소에 자식요소로 만들기.
-                var table = document.getElementById("tableId"); //테이블의 아이디를 이용
+                const table = document.getElementById("tableId"); //테이블의 아이디를 이용
 
                 //3번째 자식 요소를 얻어내서 추가해야한다.(tbody를 3번째로 만들어 놓음)
-                var tbody = table.children[2];
+                const tableBaby = table.children[2];
                 //여기에 값넣기.
-                tbody.appendChild(tr_obj);
+                tableBaby.appendChild(trObj);
             }
         }
 
